@@ -1,4 +1,4 @@
-package com.hapangama.avanesback;
+package com.avanes;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -3,7 +3,7 @@ package com.hapangama.avanesback.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hapangama.avanesback.models.User;
 import com.hapangama.avanesback.service.CustomUserDetailsService;
-import com.hapangama.avanesback.util.JwtUtil;
+import com.hapangama.avanesback.utils.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

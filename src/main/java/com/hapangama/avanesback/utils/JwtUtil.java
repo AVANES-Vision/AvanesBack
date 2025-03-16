@@ -1,4 +1,4 @@
-package com.hapangama.avanesback.util;
+package com.hapangama.avanesback.utils;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
