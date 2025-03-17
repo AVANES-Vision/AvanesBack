@@ -12,9 +12,10 @@ public class NoticeController {
     @Autowired
     NoticeService noticeService;
 
-    @GetMapping("allNotices")
-    public String allNotices() {
-        return noticeService.getAllNotices;
-    }
+    // todo please implement the following methods
+//    @GetMapping("allNotices")
+//    public String allNotices() {
+//        return noticeService.getAllNotices;
+//    }
 
 }
