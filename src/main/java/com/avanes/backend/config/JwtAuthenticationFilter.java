@@ -1,9 +1,9 @@
 package com.avanes.backend.config;
 
+import com.avanes.backend.utils.JwtUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.avanes.backend.models.User;
 import com.avanes.backend.service.CustomUserDetailsService;
-import com.avanes.backend.utils.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -13,18 +13,16 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 @RequiredArgsConstructor
-@Component
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
-    private final JwtUtil jwtUtil;
+    private final JwtUtils jwtUtil;
     private final CustomUserDetailsService customUserDetailsService;
 
     @Override
