@@ -1,4 +1,4 @@
-package com.avanes.commsupport.service;
+package com.avanes.backend.service;
 
 import org.springframework.stereotype.Service;
 

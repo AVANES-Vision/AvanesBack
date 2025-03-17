@@ -1,6 +1,6 @@
-package com.hapangama.avanesback.repository;
+package com.avanes.backend.repository;
 
-import com.hapangama.avanesback.models.User;
+import com.avanes.backend.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserRepository extends JpaRepository<User, Integer> {

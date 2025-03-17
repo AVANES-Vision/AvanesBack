@@ -1,7 +1,7 @@
-package com.hapangama.avanesback.config;
+package com.avanes.backend.config;
 
 import com.hapangama.avanesback.config.*;
-import com.hapangama.avanesback.service.CustomUserDetailsService;
+import com.avanes.backend.service.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;

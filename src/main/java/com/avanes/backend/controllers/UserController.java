@@ -1,7 +1,7 @@
-package com.hapangama.avanesback.controllers;
+package com.avanes.backend.controllers;
 
-import com.hapangama.avanesback.models.User;
-import com.hapangama.avanesback.service.interfaces.UserService;
+import com.avanes.backend.models.User;
+import com.avanes.backend.service.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

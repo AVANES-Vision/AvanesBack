@@ -1,14 +1,13 @@
-package com.hapangama.avanesback.config;
+package com.avanes.backend.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hapangama.avanesback.models.User;
-import com.hapangama.avanesback.service.CustomUserDetailsService;
-import com.hapangama.avanesback.util.JwtUtil;
+import com.avanes.backend.models.User;
+import com.avanes.backend.service.CustomUserDetailsService;
+import com.avanes.backend.utils.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;

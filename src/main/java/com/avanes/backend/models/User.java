@@ -1,4 +1,4 @@
-package com.hapangama.avanesback.models;
+package com.avanes.backend.models;
 
 
 import jakarta.persistence.Entity;

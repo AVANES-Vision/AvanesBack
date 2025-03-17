@@ -1,7 +1,7 @@
-package com.hapangama.avanesback.service;
+package com.avanes.backend.service;
 
-import com.hapangama.avanesback.models.User;
-import com.hapangama.avanesback.repository.UserRepository;
+import com.avanes.backend.models.User;
+import com.avanes.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

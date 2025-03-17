@@ -1,5 +1,5 @@
-package com.hapangama.avanesback.service.interfaces;
-import com.hapangama.avanesback.models.User;
+package com.avanes.backend.service.interfaces;
+import com.avanes.backend.models.User;
 
 import java.util.List;
 

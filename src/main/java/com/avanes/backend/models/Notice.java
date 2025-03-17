@@ -1,4 +1,4 @@
-package com.avanes.commsupport.models;
+package com.avanes.backend.models;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
