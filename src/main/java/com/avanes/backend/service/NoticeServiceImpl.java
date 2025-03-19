@@ -4,52 +4,116 @@ import com.avanes.backend.dto.GetNoticeDto;
 import com.avanes.backend.dto.GetNoticesDto;
 import com.avanes.backend.models.Notice;
 import com.avanes.backend.repository.NoticeRepository;
+import com.avanes.backend.service.interfaces.NoticeService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import jakarta.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
-public class NoticeService {
+@Transactional
+public class NoticeServiceImpl implements NoticeService {
 
     private final NoticeRepository noticeRepository;
 
-    NoticeService(NoticeRepository noticeRepository){
-        this.noticeRepository = noticeRepository;
+    public NoticeServiceImpl(NoticeRepository noticeRepository) {
+        this.noticeRepository = Objects.requireNonNull(noticeRepository, "NoticeRepository cannot be null");
     }
 
+    @Override
     public List<GetNoticesDto> getAllNotices() {
-        List<Notice> notices = this.noticeRepository.findAll();
-        List<GetNoticesDto> noticesList = new ArrayList<>();
-        for (Notice notice : notices) {
-            noticesList.add(new GetNoticesDto(notice));
+        try {
+            List<Notice> notices = noticeRepository.findAll();
+            if(notices.isEmpty()) {
+                throw new EntityNotFoundException("No notices are currently published.");
+            }
+            List<GetNoticesDto> noticesList = new ArrayList<>();
+            for (Notice notice : notices) {
+                if (notice != null) {
+                    noticesList.add(new GetNoticesDto(notice));
+                }
+            }
+            return noticesList;
+        } catch (Exception e) {
+            throw new RuntimeException("Unable to retrieve notices due to a system error: " + e.getMessage(), e);
         }
-        return noticesList;
     }
 
+    @Override
     public GetNoticeDto getNotice(Integer noticeId) {
-        Notice notice = this.noticeRepository.findById(noticeId).orElse(null);
+        if (noticeId == null) {
+            throw new IllegalArgumentException("Notice ID cannot be null");
+        }
 
-        if (notice == null) {
-            return null;
-        }else {
-            return new GetNoticeDto(notice);
+        try {
+            return noticeRepository.findById(noticeId)
+                    .map(GetNoticeDto::new)
+                    .orElseThrow(() -> new EntityNotFoundException("Notice not found with ID: " + noticeId));
+        } catch (EntityNotFoundException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to retrieve notice with ID " + noticeId + ": " + e.getMessage(), e);
         }
     }
 
+    @Override
     public GetNoticeDto addNotice(Notice notice) {
-        Notice savedNnotice = this.noticeRepository.save(notice);
-        return new GetNoticeDto(savedNnotice);
+//        validateNotice(notice);
+
+        try {
+            System.out.println("########################"+notice);
+            Notice savedNotice = noticeRepository.save(notice);
+            System.out.println("########################");
+            return new GetNoticeDto(savedNotice);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to add notice: " + e.getMessage(), e);
+        }
     }
 
+    @Override
     public GetNoticeDto updateNotice(Notice notice) {
-        Notice updatedNotice = this.noticeRepository.save(notice);
-        return new GetNoticeDto(updatedNotice);
+        validateNotice(notice);
+
+        if (!noticeRepository.existsById(Math.toIntExact(notice.getNoticeId()))) {
+            throw new EntityNotFoundException("Cannot update - Notice not found with ID: " + notice.getNoticeId());
+        }
+
+        try {
+            Notice updatedNotice = noticeRepository.save(notice);
+            return new GetNoticeDto(updatedNotice);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to update notice with ID " + notice.getNoticeId() + ": " + e.getMessage(), e);
+        }
     }
 
+    @Override
     public String deleteNotice(Integer noticeId) {
+        if (noticeId == null) {
+            throw new IllegalArgumentException("Notice ID cannot be null");
+        }
 
-        this.noticeRepository.deleteById(noticeId);
+        try {
+            if (!noticeRepository.existsById(noticeId)) {
+                throw new EntityNotFoundException("Cannot delete - Notice not found with ID: " + noticeId);
+            }
+            noticeRepository.deleteById(noticeId);
+            return "Notice deleted successfully";
+        } catch (EntityNotFoundException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to delete notice with ID " + noticeId + ": " + e.getMessage(), e);
+        }
+    }
 
-        return "Success Delete";
+    private void validateNotice(Notice notice) {
+        if (notice == null) {
+            throw new IllegalArgumentException("Notice cannot be null");
+        }
+//        if (notice.getNoticeId() == null) {
+//            throw new IllegalArgumentException("Notice ID cannot be null");
+//        }
+        // Add additional validation as needed based on your Notice model requirements
     }
 }
