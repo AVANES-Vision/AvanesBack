@@ -1,26 +1,46 @@
 package com.avanes.backend.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import lombok.Data;
+import jakarta.persistence.*;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.LocalDateTime;
+
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
 @Entity
+@Table(name = "notice")
 public class Notice {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private int id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long noticeId;
+
     private String title;
+
     private String content;
+
     private String author;
-    private int year;
-    public Notice(int id, String title, String content, String author, int year) {
-        this.id = id;
+
+    private LocalDateTime scheduleDateTime;
+
+    @CreationTimestamp
+    @Column(updatable = false, nullable = false)
+    private LocalDateTime createdDate;
+
+    @UpdateTimestamp
+    @Column(nullable = false)
+    private LocalDateTime updatedDate;
+
+    private LocalDateTime publishedDate;
+
+    private String updatedUser;
+
+    Notice(String title, String content, String author, LocalDateTime scheduleDateTime){
         this.title = title;
         this.content = content;
         this.author = author;
-        this.year = year;
+        this.scheduleDateTime = scheduleDateTime;
     }
 }
