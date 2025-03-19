@@ -35,7 +35,7 @@ public class Notice {
 
     private LocalDateTime publishedDate;
 
-    private String updatedUser;
+    private Integer updatedUser;
 
     Notice(String title, String content, String author, LocalDateTime scheduleDateTime){
         this.title = title;

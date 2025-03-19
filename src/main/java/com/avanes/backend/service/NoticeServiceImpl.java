@@ -5,9 +5,12 @@ import com.avanes.backend.dto.GetNoticesDto;
 import com.avanes.backend.models.Notice;
 import com.avanes.backend.repository.NoticeRepository;
 import com.avanes.backend.service.interfaces.NoticeService;
+import com.avanes.backend.service.interfaces.UserService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.web.bind.annotation.RequestHeader;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -59,13 +62,14 @@ public class NoticeServiceImpl implements NoticeService {
     }
 
     @Override
-    public GetNoticeDto addNotice(Notice notice) {
-//        validateNotice(notice);
+    public GetNoticeDto addNotice(@RequestHeader("Authorization") String token, Notice notice) {
+        validateNotice(notice);
+
+        notice.setAuthor(null);
+        notice.setUpdatedUser(null);
 
         try {
-            System.out.println("########################"+notice);
             Notice savedNotice = noticeRepository.save(notice);
-            System.out.println("########################");
             return new GetNoticeDto(savedNotice);
         } catch (Exception e) {
             throw new RuntimeException("Failed to add notice: " + e.getMessage(), e);
@@ -75,6 +79,8 @@ public class NoticeServiceImpl implements NoticeService {
     @Override
     public GetNoticeDto updateNotice(Notice notice) {
         validateNotice(notice);
+
+        notice.setUpdatedUser(null);
 
         if (!noticeRepository.existsById(Math.toIntExact(notice.getNoticeId()))) {
             throw new EntityNotFoundException("Cannot update - Notice not found with ID: " + notice.getNoticeId());
