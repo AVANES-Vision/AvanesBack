@@ -1,9 +1,7 @@
 package com.avanes.backend.models;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
 @Entity
@@ -22,24 +20,10 @@ public class Quizquestion {
     @Lob
     private byte[] voice;
 
+    @Setter
+    @Getter
     @ManyToOne
     @JoinColumn(name = "quizId", nullable = false)
     private Quiz quiz;
-
-    // ✅ Corrected getter method
-    public Quiz getQuiz() {
-        return quiz;  // ✅ Changed from "Quiz" to "quiz" (correct variable name)
-    }
-
-    // ✅ Corrected setter method
-    public void setQuiz(Quiz quiz) {
-        this.quiz = quiz;
-    }
 }
-
-
-
-
-
-
 

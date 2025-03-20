@@ -36,7 +36,7 @@ public class QuizquestionServiceImpl implements QuizquestionService {
     // ✅ Get all questions for a specific quiz
     @Override
     public List<Quizquestion> getQuestionsByQuizId(Long quizId) {
-        return quizQuestionRepository.findByQuizQuizid(quizId);
+        return quizQuestionRepository.findByQuizQuizId(quizId);
     }
 
     // ✅ Save a new quiz question

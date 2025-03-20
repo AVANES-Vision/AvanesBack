@@ -18,7 +18,7 @@ public class QuestionAnswer {
 
     @ManyToOne
     @MapsId("questionId") // Maps questionId from the composite key to this relationship
-    @JoinColumn(name = "question_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "question_id", referencedColumnName = "questionid", nullable = false)
     private Quizquestion question; // Foreign key reference to Quizquestion
 
     private Integer answerNo;

@@ -15,7 +15,7 @@ import java.time.LocalTime;
 @Table(name="quiz")
 public class Quiz {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long quizId;
     private String title;
     private String subtitle;
