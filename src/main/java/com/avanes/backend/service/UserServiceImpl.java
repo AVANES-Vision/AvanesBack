@@ -3,6 +3,7 @@ package com.avanes.backend.service;
 import com.avanes.backend.models.User;
 import com.avanes.backend.repository.UserRepository;
 import com.avanes.backend.service.interfaces.UserService;
+import com.avanes.backend.utils.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private JwtUtils jwtUtils;
 
     @Override
     public User saveUser(User user) {
