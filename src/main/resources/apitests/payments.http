@@ -1,0 +1,104 @@
+### Environment variables
+@baseUrl = http://localhost:8080/api/v1/payments
+@contentType = application/json
+
+### Create a new payment
+POST {{baseUrl}}
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="payment"
+Content-Type: application/json
+
+{
+  "userId": 1,
+  "fullName": "John Doe",
+  "branchName" : "Main Branch",
+  "bankName" : "Bank of America",
+  "paymentDate": "2021-07-01T10:00:00",
+  "examIds": [1],
+  "amount": 499.99,
+  "currency": "USD",
+  "paymentMethod": "CREDIT_CARD",
+  "description": "Subscription payment",
+  "referenceNumber": "REF-123456"
+}
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="slip"; filename="img.png"
+Content-Type: image/jpeg
+
+< ./img.png
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+### Update an existing payment
+PUT {{baseUrl}}/2
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="payment"
+Content-Type: application/json
+
+{
+  "amount": 599.99,
+  "currency": "USD",
+  "fullName": "John Doe",
+  "branchName" : "Main Branch",
+  "bankName" : "Bank of America",
+  "paymentDate": "2021-07-01T10:00:00",
+  "examIds": [1],
+  "paymentMethod": "CREDIT_CARD",
+  "description": "Updated subscription payment",
+  "referenceNumber": "REF-123456-UPDATED"
+}
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="slip"; filename="updated_receipt.jpg"
+Content-Type: image/jpeg
+
+< ./img.png
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+### Get payment by ID
+GET {{baseUrl}}/2
+
+### Delete payment
+DELETE {{baseUrl}}/1
+
+### Get all payments with pagination (default parameters)
+GET {{baseUrl}}
+
+### Get all payments with custom pagination and sorting
+GET {{baseUrl}}?page=0&size=5&sortField=amount&direction=desc
+
+### Get payments by status
+GET {{baseUrl}}/status/PENDING?page=0&size=10
+
+### Get payments by status with custom sorting
+GET {{baseUrl}}/status/APPROVED?page=0&size=20&sortField=createdAt&direction=asc
+
+### Get payments by user ID
+GET {{baseUrl}}/user/1?page=0&size=10
+
+### Get payments by user ID and status
+GET {{baseUrl}}/user/1?status=PENDING&page=0&size=10&sortField=amount&direction=desc
+
+### Approve a payment
+POST {{baseUrl}}/approve
+Content-Type: {{contentType}}
+
+{
+  "paymentId": 2,
+  "approve": true,
+  "approverId": 5,
+  "notes": "Payment approved after verification"
+}
+
+### Reject a payment
+POST {{baseUrl}}/reject
+Content-Type: {{contentType}}
+
+{
+  "paymentId": 2,
+  "approve": false,
+  "approverId": 5,
+  "notes": "Payment rejected due to invalid receipt"
+}
