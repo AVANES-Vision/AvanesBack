@@ -1,69 +1,41 @@
 package com.avanes.backend.config;
 
-import com.avanes.backend.exceptions.ResourceNotFoundException;
-import jakarta.validation.ConstraintViolationException;
+import com.avanes.backend.dto.GlobalResponse;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import com.avanes.backend.exceptions.PaymentNotFoundException;
-import com.avanes.backend.exceptions.FileStorageException;
-
-
-@RestControllerAdvice
+@ControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<String> handleResourceNotFoundException(ResourceNotFoundException ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    // Handle EntityNotFoundException (404 Not Found)
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<GlobalResponse<String>> handleEntityNotFoundException(EntityNotFoundException ex) {
+        GlobalResponse<String> response = new GlobalResponse<>(false, "Resource not found", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
 
-    @ExceptionHandler(PaymentNotFoundException.class)
-    public ResponseEntity<String> handlePaymentNotFoundException(PaymentNotFoundException ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    // Handle IllegalArgumentException (400 Bad Request)
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<GlobalResponse<String>> handleIllegalArgumentException(IllegalArgumentException ex) {
+        GlobalResponse<String> response = new GlobalResponse<>(false, "Invalid request", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
-    @ExceptionHandler(FileStorageException.class)
-    public ResponseEntity<String> handleFileStorageException(FileStorageException ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
-    @ExceptionHandler(IllegalStateException.class)
-    public ResponseEntity<String> handleIllegalStateException(IllegalStateException ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(MaxUploadSizeExceededException.class)
-    public ResponseEntity<String> handleMaxUploadSizeExceededException(MaxUploadSizeExceededException ex) {
-        return new ResponseEntity<>("File size exceeds the maximum allowed limit", HttpStatus.BAD_REQUEST);
-    }
-
+    // Handle validation errors (400 Bad Request)
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
-        Map<String, String> errors = new HashMap<>();
-        ex.getBindingResult().getAllErrors().forEach((error) -> {
-            String fieldName = ((FieldError) error).getField();
-            String errorMessage = error.getDefaultMessage();
-            errors.put(fieldName, errorMessage);
-        });
-        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+    public ResponseEntity<GlobalResponse<String>> handleValidationException(MethodArgumentNotValidException ex) {
+        GlobalResponse<String> response = new GlobalResponse<>(false, "Validation failed", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
-    @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<String> handleConstraintViolationException(ConstraintViolationException ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
-    }
-
+    // Handle all other unhandled exceptions (500 Internal Server Error)
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleGlobalException(Exception ex, WebRequest request) {
-        return new ResponseEntity<>("An unexpected error occurred: " + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<GlobalResponse<String>> handleGeneralException(Exception ex) {
+        GlobalResponse<String> response = new GlobalResponse<>(false, "Internal Server Error", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
     }
 }
