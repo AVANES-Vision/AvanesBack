@@ -1,4 +1,4 @@
-package com.avanes.backend.exception;
+package com.avanes.backend.config;
 
 import com.avanes.backend.dto.GlobalResponse;
 import jakarta.persistence.EntityNotFoundException;
