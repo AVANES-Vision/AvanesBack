@@ -1,57 +1,60 @@
 package com.avanes.backend.models;
 
-
-import com.avanes.backend.types.PaymentStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
 
-@Entity
-@Table(name = "payments")
-@Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Payment extends BaseEntity {
+@Data
+@Entity
+@Table(name = "payments")
+public class Payment {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
+    private String userId;
 
-    @Column(name = "full_name", nullable = false)
-    private String fullName;
+    private String approvedBy;
 
-    @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal amount;
-
-    @Column(name = "slip_file_path")
-    private String slipFilePath;
-
-    @Column(name = "bank_name", nullable = false)
-    private String bankName;
-
-    @Column(name = "branch_name", nullable = false)
-    private String branchName;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private PaymentStatus status = PaymentStatus.PENDING;
-
-    @Column(name = "approved_by")
-    private Long approvedBy;
-
-    @Column(name = "approved_date")
     private LocalDateTime approvedDate;
 
-    @Column(name = "payment_date", nullable = false)
+    private String fullName;
+
+    private String bankName;
+
+    private String branchName;
+
+    private BigDecimal amount;
+
     private LocalDateTime paymentDate;
 
-    @OneToMany(mappedBy = "payment", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<PaymentExam> paymentExams = new HashSet<>();
+    private String slipFile;
+
+    private String status;
+
+    @CreationTimestamp
+    @Column(updatable = false, nullable = false)
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    @Column(nullable = false)
+    private LocalDateTime updatedAt;
+
+    // Constructor with required fields
+    public Payment(String userId, String fullName, String bankName, String branchName,
+                   BigDecimal amount, LocalDateTime paymentDate, String status) {
+        this.userId = userId;
+        this.fullName = fullName;
+        this.bankName = bankName;
+        this.branchName = branchName;
+        this.amount = amount;
+        this.paymentDate = paymentDate;
+        this.status = status;
+    }
 }
