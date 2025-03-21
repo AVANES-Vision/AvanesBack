@@ -8,12 +8,14 @@ public class GetNoticesDto {
     public String noticeTitle;
     public String noticeContent;
     public Long noticeId;
-    public LocalDateTime publishedDate;
+    public LocalDateTime scheduleDateTime;
+    public LocalDateTime createdDate;
 
     public GetNoticesDto(Notice notice) {
         this.noticeTitle = notice.getTitle();
         this.noticeContent = notice.getContent();
         this.noticeId = notice.getNoticeId();
-        this.publishedDate = notice.getPublishedDate();
+        this.scheduleDateTime = notice.getScheduleDateTime();
+        this.createdDate = notice.getCreatedDate();
     }
 }
