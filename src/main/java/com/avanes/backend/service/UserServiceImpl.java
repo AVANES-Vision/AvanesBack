@@ -144,7 +144,7 @@ public class UserServiceImpl implements UserService {
         try (CSVPrinter csvPrinter = new CSVPrinter(new OutputStreamWriter(out), CSVFormat.DEFAULT.withHeader(CSV_HEADERS))) {
             for (User user : users) {
                 csvPrinter.printRecord(
-                        user.getUserId(),
+                        user.getUserId().toString(),
                         user.getUsername(),
                         "", // Don't export passwords
                         user.getRole(),
