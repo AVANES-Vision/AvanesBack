@@ -32,8 +32,8 @@ public class NoticeController {
     }
 
     @PostMapping
-    public ResponseEntity<GlobalResponse<GetNoticeDto>> addNotice(@RequestHeader("Authorization") String token, @RequestBody Notice notice) {
-        GetNoticeDto createdNotice = noticeService.addNotice(token,notice);
+    public ResponseEntity<GlobalResponse<GetNoticeDto>> addNotice( @RequestBody Notice notice) {
+        GetNoticeDto createdNotice = noticeService.addNotice(notice);
         return ResponseHandler.created(createdNotice, "Notice created successfully");
     }
 

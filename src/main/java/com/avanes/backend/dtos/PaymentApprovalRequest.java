@@ -14,6 +14,4 @@ public class PaymentApprovalRequest {
 
     @NotNull(message = "Decision is required")
     private Boolean approve;
-
-    private String comment;
 }

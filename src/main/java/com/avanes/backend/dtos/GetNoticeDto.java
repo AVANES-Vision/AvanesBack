@@ -9,6 +9,7 @@ public class GetNoticeDto {
     public String noticeContent;
     public Long noticeId;
     public String author;
+    public String module;
     public LocalDateTime publishedDate;
 
     public GetNoticeDto(Notice notice){
@@ -17,5 +18,6 @@ public class GetNoticeDto {
         this.noticeId = notice.getNoticeId();
         this.author = notice.getAuthor();
         this.publishedDate = notice.getPublishedDate();
+        this.module = notice.getModule();
     }
 }

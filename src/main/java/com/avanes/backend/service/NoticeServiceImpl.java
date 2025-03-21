@@ -8,7 +8,6 @@ import com.avanes.backend.service.interfaces.NoticeService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.web.bind.annotation.RequestHeader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +60,7 @@ public class NoticeServiceImpl implements NoticeService {
     }
 
     @Override
-    public GetNoticeDto addNotice(@RequestHeader("Authorization") String token, Notice notice) {
+    public GetNoticeDto addNotice(Notice notice) {
         validateNotice(notice);
 
         notice.setAuthor(null);
