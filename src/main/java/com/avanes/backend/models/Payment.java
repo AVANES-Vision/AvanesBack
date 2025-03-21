@@ -22,13 +22,15 @@ import java.util.Set;
 public class Payment extends BaseEntity {
 
     @Column(name = "user_id", nullable = false)
-    private Long userId;
+    private long userId;
 
     @Column(name = "full_name", nullable = false)
     private String fullName;
 
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal amount;
+
+
 
     @Column(name = "slip_file_path")
     private String slipFilePath;
