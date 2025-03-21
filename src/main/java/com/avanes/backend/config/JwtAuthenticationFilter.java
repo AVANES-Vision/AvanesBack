@@ -1,5 +1,6 @@
 package com.avanes.backend.config;
 
+import com.avanes.backend.repository.UserRepository;
 import com.avanes.backend.utils.JwtUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.avanes.backend.models.User;
@@ -13,6 +14,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -24,6 +26,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     private final AuthenticationManager authenticationManager;
     private final JwtUtils jwtUtil;
     private final CustomUserDetailsService customUserDetailsService;
+    private final UserRepository userRepository;
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
@@ -42,7 +45,10 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         String token = jwtUtil.generateToken(username);
         Map<String, String> tokenMap = new HashMap<>();
         tokenMap.put("token", token);
-        tokenMap.put("userId", customUserDetailsService.loadUserByUsername(username).getUsername().toString());
+        User user = userRepository.findByUsername(username);
+        tokenMap.put("userId",  user.getUserId().toString());
+        tokenMap.put("username", user.getUsername());
+        tokenMap.put("role", user.getRole());
         response.setContentType("application/json");
         new ObjectMapper().writeValue(response.getWriter(), tokenMap);
     }

@@ -1,7 +1,9 @@
 package com.avanes.backend.config;
 
+import com.avanes.backend.repository.UserRepository;
 import com.avanes.backend.service.CustomUserDetailsService;
 import com.avanes.backend.utils.JwtUtils;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,6 +25,7 @@ import org.springframework.web.filter.CorsFilter;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
+@RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -30,12 +33,7 @@ public class SecurityConfig {
     private final CustomUserDetailsService customUserDetailsService;
     private final JwtUtils jwtUtil;
     private final JwtAuthorizationFilter jwtAuthorizationFilter;
-
-    public SecurityConfig(CustomUserDetailsService customUserDetailsService, JwtUtils jwtUtil, JwtAuthorizationFilter jwtAuthorizationFilter) {
-        this.customUserDetailsService = customUserDetailsService;
-        this.jwtUtil = jwtUtil;
-        this.jwtAuthorizationFilter = jwtAuthorizationFilter;
-    }
+    private final UserRepository userRepository;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -43,7 +41,7 @@ public class SecurityConfig {
         AuthenticationManager authManager = authenticationManager(customUserDetailsService, passwordEncoder());
 
         // Create JWT auth filter with explicit auth manager
-        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authManager, jwtUtil, customUserDetailsService);
+        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authManager, jwtUtil, customUserDetailsService, userRepository);
         jwtAuthenticationFilter.setFilterProcessesUrl("/login");
 
         http
