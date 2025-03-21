@@ -52,11 +52,11 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers(req -> req.getServletPath().startsWith("/api/public/**")).permitAll()
-                        .requestMatchers(req -> req.getServletPath().startsWith("/api")).authenticated()
+                        .requestMatchers(req -> req.getServletPath().startsWith("/api")).permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .requestMatchers("/login").permitAll()
                         .requestMatchers("/logout").permitAll()
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
                 )
                 // Use addFilterAt instead of addFilter to avoid registration conflicts
                 .addFilterAt(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
