@@ -1,6 +1,6 @@
 package com.avanes.backend.utils;
 
-import com.avanes.backend.dto.GlobalResponse;
+import com.avanes.backend.dtos.GlobalResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 

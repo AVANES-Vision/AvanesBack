@@ -1,4 +1,4 @@
-package com.avanes.backend.dto;
+package com.avanes.backend.dtos;
 
 import lombok.Data;
 

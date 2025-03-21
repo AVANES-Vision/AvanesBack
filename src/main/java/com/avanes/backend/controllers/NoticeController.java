@@ -1,8 +1,8 @@
 package com.avanes.backend.controllers;
 
-import com.avanes.backend.dto.GlobalResponse;
-import com.avanes.backend.dto.GetNoticeDto;
-import com.avanes.backend.dto.GetNoticesDto;
+import com.avanes.backend.dtos.GlobalResponse;
+import com.avanes.backend.dtos.GetNoticeDto;
+import com.avanes.backend.dtos.GetNoticesDto;
 import com.avanes.backend.models.Notice;
 import com.avanes.backend.service.interfaces.NoticeService;
 import com.avanes.backend.utils.ResponseHandler;

@@ -1,6 +1,6 @@
 package com.avanes.backend.config;
 
-import com.avanes.backend.dto.GlobalResponse;
+import com.avanes.backend.dtos.GlobalResponse;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
