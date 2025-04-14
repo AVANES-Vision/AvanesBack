@@ -14,7 +14,7 @@ public class GlobalExceptionHandler {
     // Handle EntityNotFoundException (404 Not Found)
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<GlobalResponse<String>> handleEntityNotFoundException(EntityNotFoundException ex) {
-        GlobalResponse<String> response = new GlobalResponse<>(false, "Resource not found", ex.getMessage());
+        GlobalResponse<String> response = new GlobalResponse<>(false, (ex.getMessage() != null) ? ex.getMessage() : "Resource Not Found", null);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
 

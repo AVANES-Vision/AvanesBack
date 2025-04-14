@@ -1,5 +1,6 @@
 package com.avanes.backend.dtos;
 
+import com.avanes.backend.models.Modules;
 import com.avanes.backend.models.Notice;
 
 import java.time.LocalDateTime;

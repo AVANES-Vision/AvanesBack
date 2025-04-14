@@ -17,4 +17,8 @@ public interface NoticeService {
     GetNoticeDto updateNotice(Notice notice);
 
     String deleteNotice(Integer noticeId);
+
+    List<GetNoticesDto> getAllNoticesByModuleIdAsAdmin(String moduleId);
+
+    List<GetNoticesDto> getAllNoticesByModuleIdAsUser(String moduleId);
 }

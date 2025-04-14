@@ -37,6 +37,8 @@ public class NoticeServiceImpl implements NoticeService {
                 }
             }
             return noticesList;
+        } catch(EntityNotFoundException e){
+            throw e;
         } catch (Exception e) {
             throw new RuntimeException("Unable to retrieve notices due to a system error: " + e.getMessage(), e);
         }
@@ -108,6 +110,76 @@ public class NoticeServiceImpl implements NoticeService {
             throw e;
         } catch (Exception e) {
             throw new RuntimeException("Failed to delete notice with ID " + noticeId + ": " + e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public List<GetNoticesDto> getAllNoticesByModuleIdAsAdmin(String moduleId) {
+        if (moduleId == null) {
+            throw new IllegalArgumentException("Module ID cannot be null");
+        }
+
+        try {
+            List<Notice> notices = noticeRepository.findAllByModule(moduleId);
+            List<Notice> allNotices = noticeRepository.findAllByModule("All");
+            if (notices.isEmpty()) {
+                throw new EntityNotFoundException("No notices found for module ID: " + moduleId);
+            }
+            List<GetNoticesDto> noticesList = new ArrayList<>();
+            for (Notice notice : notices) {
+                if (notice != null) {
+                    noticesList.add(new GetNoticesDto(notice));
+                }
+            }
+            if(!allNotices.isEmpty()) {
+                for (Notice notice : allNotices) {
+                    if (notice != null ) {
+                        noticesList.add(new GetNoticesDto(notice));
+                    }
+                }
+            }
+            return noticesList;
+        } catch (EntityNotFoundException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to retrieve notices for module ID " + moduleId + ": " + e.getMessage(), e);
+        }
+    }
+
+
+
+
+    @Override
+    public List<GetNoticesDto> getAllNoticesByModuleIdAsUser(String moduleId) {
+        if (moduleId == null) {
+            throw new IllegalArgumentException("Module ID cannot be null");
+        }
+
+        try {
+            List<Notice> notices = noticeRepository.findAllByModule(moduleId);
+            List<Notice> allNotices = noticeRepository.findAllByModule("All");
+            if (notices.isEmpty()) {
+                throw new EntityNotFoundException("No notices found for module ID: " + moduleId);
+            }
+            List<GetNoticesDto> noticesList = new ArrayList<>();
+            for (Notice notice : notices) {
+                if (notice != null && notice.getScheduleDateTime().isBefore(java.time.LocalDateTime.now())) {
+                    noticesList.add(new GetNoticesDto(notice));
+                }
+            }
+
+            if(!allNotices.isEmpty()) {
+                for (Notice notice : allNotices) {
+                    if (notice != null && notice.getScheduleDateTime().isBefore(java.time.LocalDateTime.now())) {
+                        noticesList.add(new GetNoticesDto(notice));
+                    }
+                }
+            }
+            return noticesList;
+        } catch (EntityNotFoundException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to retrieve notices for module ID " + moduleId + ": " + e.getMessage(), e);
         }
     }
 

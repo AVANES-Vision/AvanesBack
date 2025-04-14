@@ -34,11 +34,7 @@ public class PaymentController {
 
     /**
      * Create a new payment
-     *
-     * @param paymentRequest payment information
-     * @param slipFile payment receipt/slip image file
-     * @return created payment details
-     * @throws IOException if file handling fails
+
      */
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Map<String, Object>> createPayment(
@@ -58,12 +54,7 @@ public class PaymentController {
 
     /**
      * Update an existing payment
-     *
-     * @param id payment id
-     * @param paymentRequest updated payment information
-     * @param slipFile updated payment receipt/slip image file
-     * @return updated payment details
-     * @throws IOException if file handling fails
+
      */
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Map<String, Object>> updatePayment(
@@ -84,9 +75,7 @@ public class PaymentController {
 
     /**
      * Get payment by ID
-     *
-     * @param id payment ID
-     * @return payment details
+
      */
     @GetMapping("/{id}")
     public ResponseEntity<Map<String, Object>> getPaymentById(@PathVariable Long id) {
@@ -103,10 +92,7 @@ public class PaymentController {
 
     /**
      * Delete payment
-     *
-     * @param id payment ID
-     * @return success response
-     * @throws IOException if file deletion fails
+
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Map<String, Object>> deletePayment(@PathVariable Long id) throws IOException {
