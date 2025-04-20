@@ -3,8 +3,10 @@ package com.avanes.backend.service;
 import com.avanes.backend.dtos.GetNoticeDto;
 import com.avanes.backend.dtos.GetNoticesDto;
 import com.avanes.backend.models.Notice;
+import com.avanes.backend.models.Notification;
 import com.avanes.backend.repository.NoticeRepository;
 import com.avanes.backend.service.interfaces.NoticeService;
+import com.avanes.backend.service.interfaces.NotificationService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import jakarta.persistence.EntityNotFoundException;
@@ -18,9 +20,11 @@ import java.util.Objects;
 public class NoticeServiceImpl implements NoticeService {
 
     private final NoticeRepository noticeRepository;
+    private final NotificationService notificationService;
 
-    public NoticeServiceImpl(NoticeRepository noticeRepository) {
+    public NoticeServiceImpl(NoticeRepository noticeRepository, NotificationService notificationService) {
         this.noticeRepository = Objects.requireNonNull(noticeRepository, "NoticeRepository cannot be null");
+        this.notificationService = Objects.requireNonNull(notificationService, "NotificationService cannot be null");
     }
 
     @Override
@@ -70,6 +74,12 @@ public class NoticeServiceImpl implements NoticeService {
 
         try {
             Notice savedNotice = noticeRepository.save(notice);
+            notificationService.createNotification(
+                    List.of("702"),
+                    savedNotice.getTitle(),
+                    savedNotice.getContent(),
+                    Notification.NotificationType.NOTICE_PUBLISHED
+            );
             return new GetNoticeDto(savedNotice);
         } catch (Exception e) {
             throw new RuntimeException("Failed to add notice: " + e.getMessage(), e);
