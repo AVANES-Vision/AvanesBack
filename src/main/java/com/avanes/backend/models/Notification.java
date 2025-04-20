@@ -24,7 +24,7 @@ public class Notification {
     @Column(nullable = false, length = 1000)
     private String message;
 
-    @Column(nullable = false, columnDefinition = "ENUM('QUIZ_PUBLISHED', 'ASSIGNMENT_DUE', 'NEW_MATERIAL', 'ANNOUNCEMENT', 'GRADE_RELEASED', 'NOTICE_PUBLISHED')")
+    @Column(nullable = false, columnDefinition = "ENUM('QUIZ_PUBLISHED', 'ASSIGNMENT_DUE', 'NEW_MATERIAL', 'ANNOUNCEMENT', 'GRADE_RELEASED', 'NOTICE_PUBLISHED','OTHER')")
     @Enumerated(EnumType.STRING)
     private NotificationType type;
 
@@ -51,7 +51,8 @@ public class Notification {
         NEW_MATERIAL,
         ANNOUNCEMENT,
         GRADE_RELEASED,
-        NOTICE_PUBLISHED
+        NOTICE_PUBLISHED,
+        OTHER
     }
 
     public enum NotificationAudience {
