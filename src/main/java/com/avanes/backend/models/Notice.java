@@ -23,6 +23,8 @@ public class Notice {
 
     private String author;
 
+    private String module;
+
     private LocalDateTime scheduleDateTime;
 
     @CreationTimestamp

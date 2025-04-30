@@ -19,6 +19,18 @@ public class NoticeController {
         this.noticeService = noticeService;
     }
 
+    @GetMapping("/module/admin/{moduleId}")
+    public ResponseEntity<GlobalResponse<List<GetNoticesDto>>> getAllNoticesByModuleIdAsAdmin(@PathVariable String moduleId) {
+        List<GetNoticesDto> notices = noticeService.getAllNoticesByModuleIdAsAdmin(moduleId);
+        return ResponseHandler.success(notices, "Notices retrieved successfully for the module");
+    }
+
+    @GetMapping("/module/{moduleId}")
+    public ResponseEntity<GlobalResponse<List<GetNoticesDto>>> getAllNoticesByModuleIdAsUser(@PathVariable String moduleId) {
+        List<GetNoticesDto> notices = noticeService.getAllNoticesByModuleIdAsUser(moduleId);
+        return ResponseHandler.success(notices, "Notices retrieved successfully for the module");
+    }
+
     @GetMapping
     public ResponseEntity<GlobalResponse<List<GetNoticesDto>>> getAllNotices() {
         List<GetNoticesDto> notices = noticeService.getAllNotices();
@@ -32,8 +44,8 @@ public class NoticeController {
     }
 
     @PostMapping
-    public ResponseEntity<GlobalResponse<GetNoticeDto>> addNotice(@RequestHeader("Authorization") String token, @RequestBody Notice notice) {
-        GetNoticeDto createdNotice = noticeService.addNotice(token,notice);
+    public ResponseEntity<GlobalResponse<GetNoticeDto>> addNotice( @RequestBody Notice notice) {
+        GetNoticeDto createdNotice = noticeService.addNotice(notice);
         return ResponseHandler.created(createdNotice, "Notice created successfully");
     }
 

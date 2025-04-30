@@ -1,5 +1,6 @@
 package com.avanes.backend.dtos;
 
+import com.avanes.backend.models.Modules;
 import com.avanes.backend.models.Notice;
 
 import java.time.LocalDateTime;
@@ -9,6 +10,7 @@ public class GetNoticeDto {
     public String noticeContent;
     public Long noticeId;
     public String author;
+    public String module;
     public LocalDateTime publishedDate;
 
     public GetNoticeDto(Notice notice){
@@ -17,5 +19,6 @@ public class GetNoticeDto {
         this.noticeId = notice.getNoticeId();
         this.author = notice.getAuthor();
         this.publishedDate = notice.getPublishedDate();
+        this.module = notice.getModule();
     }
 }
