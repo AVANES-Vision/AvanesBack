@@ -43,7 +43,7 @@ public class MagicLinkController {
 
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<MagicLink>> getMagicLinksByUser(@PathVariable Long userId) {
-        return ResponseEntity.ok(magicLinkService.getMagicLinksByUser(userId));
+        return ResponseEntity.ok(magicLinkService.getMagicLinksByUser(Math.toIntExact(userId)));
     }
 
     @GetMapping("/exam/{examId}")

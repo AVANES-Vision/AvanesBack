@@ -42,8 +42,8 @@ public class MagicLinkService {
         return magicLinkRepository.findByRandomString(randomString);
     }
 
-    public List<MagicLink> getMagicLinksByUser(Long userId) {
-        User user = userRepository.findById(Math.toIntExact(userId))
+    public List<MagicLink> getMagicLinksByUser(Integer userId) {
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
 
         return magicLinkRepository.findByUser(user);

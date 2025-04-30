@@ -47,11 +47,16 @@ public class ExamController {
         exam.setDuration((Integer) request.get("duration"));
         exam.setStatus(Exam.ExamStatus.valueOf((String) request.get("status")));
 
-        @SuppressWarnings("unchecked")
-        List<Long> questionIds = (List<Long>) request.get("questionIds");
+        // Assign to List<Integer> first
+        List<Integer> questionIdsInt = (List<Integer>) request.get("questionIds");
+        List<Long> questionIds = questionIdsInt.stream()
+                .map(Integer::longValue)
+                .toList();
 
-        @SuppressWarnings("unchecked")
-        List<Long> userIds = (List<Long>) request.get("userIds");
+        List<Integer> userIdsInt = (List<Integer>) request.get("userIds");
+        List<Long> userIds = userIdsInt.stream()
+                .map(Integer::longValue)
+                .toList();
 
         Exam createdExam = examService.createExam(exam, questionIds, userIds);
 

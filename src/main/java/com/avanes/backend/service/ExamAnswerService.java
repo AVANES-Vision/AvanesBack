@@ -33,22 +33,22 @@ public class ExamAnswerService {
         this.answerRepository = answerRepository;
     }
 
-    public List<ExamAnswer> getAnswersByExamAndUser(Long examId, Long userId) {
+    public List<ExamAnswer> getAnswersByExamAndUser(Long examId, Integer userId) {
         Exam exam = examRepository.findById(examId)
                 .orElseThrow(() -> new RuntimeException("Exam not found with ID: " + examId));
 
-        User user = userRepository.findById(Math.toIntExact(userId))
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
 
         return examAnswerRepository.findByExamAndUser(exam, user);
     }
 
     @Transactional
-    public ExamAnswer saveAnswer(Long examId, Long userId, Long questionId, Long answerId) {
+    public ExamAnswer saveAnswer(Long examId, Integer userId, Long questionId, Long answerId) {
         Exam exam = examRepository.findById(examId)
                 .orElseThrow(() -> new RuntimeException("Exam not found with ID: " + examId));
 
-        User user = userRepository.findById(Math.toIntExact(userId))
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
 
         Question question = questionRepository.findById(questionId)
@@ -92,11 +92,11 @@ public class ExamAnswerService {
         return examAnswerRepository.save(examAnswer);
     }
 
-    public int calculateScore(Long examId, Long userId) {
+    public int calculateScore(Long examId, Integer userId) {
         Exam exam = examRepository.findById(examId)
                 .orElseThrow(() -> new RuntimeException("Exam not found with ID: " + examId));
 
-        User user = userRepository.findById(Math.toIntExact(userId))
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
 
         List<ExamAnswer> userAnswers = examAnswerRepository.findByExamAndUser(exam, user);
