@@ -77,7 +77,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Page<User> getAllUsers(Pageable pageable) {
+    public Page<User> getAllUsers(String role, Pageable pageable) {
+
+        if (role != null && !role.isEmpty()){
+            return userRepository.findAllByRoleEqualsIgnoreCase(role, pageable);
+        }
+
         return userRepository.findAll(pageable);
     }
 

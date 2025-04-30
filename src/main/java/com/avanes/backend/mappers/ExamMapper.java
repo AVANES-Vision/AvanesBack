@@ -4,6 +4,8 @@ import com.avanes.backend.dtos.ExamDTO;
 import com.avanes.backend.models.Exam;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
+
 @Component
 public class ExamMapper {
 
@@ -14,10 +16,10 @@ public class ExamMapper {
 
         ExamDTO dto = new ExamDTO();
         dto.setId(exam.getId());
-        dto.setName(exam.getName());
-        dto.setCode(exam.getCode());
-        dto.setFee(exam.getFee());
-        dto.setDescription(exam.getDescription());
+        dto.setName(exam.getTitle());
+        dto.setCode(String.valueOf(exam.getId()));
+        dto.setFee(BigDecimal.valueOf(exam.getId()));
+        dto.setDescription(exam.getTitle());
 
         return dto;
     }
@@ -29,10 +31,10 @@ public class ExamMapper {
 
         Exam exam = new Exam();
         exam.setId(dto.getId());
-        exam.setName(dto.getName());
-        exam.setCode(dto.getCode());
-        exam.setFee(dto.getFee());
-        exam.setDescription(dto.getDescription());
+//        exam.setName(dto.getName());
+//        exam.setCode(dto.getCode());
+//        exam.setFee(dto.getFee());
+//        exam.setDescription(dto.getDescription());
 
         return exam;
     }

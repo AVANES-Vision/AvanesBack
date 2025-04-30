@@ -1,37 +1,37 @@
 package com.avanes.backend.models;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.Set;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
-@Table(name = "exams")
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Exam extends BaseEntity {
+public class Exam {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @Column(nullable = false)
-    private String name;
+    private String title;
 
-    @Column(nullable = false)
-    private String code;
+    private LocalDateTime startTimestamp;
 
-    @Column(nullable = false)
-    private BigDecimal fee;
+    private Integer duration; // in minutes
 
-    @Column(length = 1000)
-    private String description;
+    @Enumerated(EnumType.STRING)
+    private ExamStatus status;
 
-    @OneToMany(mappedBy = "exam")
-    private Set<PaymentExam> paymentExams = new HashSet<>();
+    @OneToMany(mappedBy = "exam", cascade = CascadeType.ALL)
+    private List<ExamQuestion> examQuestions;
+
+    @OneToMany(mappedBy = "exam", cascade = CascadeType.ALL)
+    private List<MagicLink> magicLinks;
+
+    public enum ExamStatus {
+        SCHEDULED, ONGOING, ENDED
+    }
 }

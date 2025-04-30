@@ -42,13 +42,13 @@ public class UserController {
 
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Integer id) {
-        User user = userService.getUserById(id);
+        User user= userService.getUserById(id);
         return ResponseEntity.ok(user);
     }
 
     @GetMapping
-    public ResponseEntity<Page<User>> getAllUsers(Pageable pageable) {
-        Page<User> users = userService.getAllUsers(pageable);
+    public ResponseEntity<Page<User>> getAllUsers(@RequestParam(name = "role", required = false) String role, Pageable pageable) {
+        Page<User> users = userService.getAllUsers(role,pageable);
         return ResponseEntity.ok(users);
     }
 

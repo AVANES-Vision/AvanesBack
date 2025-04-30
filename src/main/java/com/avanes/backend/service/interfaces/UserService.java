@@ -13,7 +13,7 @@ public interface UserService {
     User updateUser(User user);
     void deleteUser(Integer id);
     User getUserById(Integer id);
-    Page<User> getAllUsers(Pageable pageable);
+    Page<User> getAllUsers(String role, Pageable pageable);
     void importUsersFromCsv(MultipartFile file) throws IOException;
     byte[] exportUsersToCsv() throws IOException;
 }

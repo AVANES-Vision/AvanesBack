@@ -1,12 +1,13 @@
 package com.avanes.backend.repository;
 
+
 import com.avanes.backend.models.Exam;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
+import java.util.List;
 
 @Repository
 public interface ExamRepository extends JpaRepository<Exam, Long> {
-    Optional<Exam> findByCode(String code);
+    List<Exam> findByStatus(Exam.ExamStatus status);
 }
