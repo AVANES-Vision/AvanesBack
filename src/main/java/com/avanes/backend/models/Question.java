@@ -1,6 +1,5 @@
 package com.avanes.backend.models;
 
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,4 +19,11 @@ public class Question {
 
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
     private List<Answer> answers;
+
+    public void setAnswers(List<Answer> answers) {
+        this.answers = answers;
+        if (answers != null) {
+            answers.forEach(answer -> answer.setQuestion(this));
+        }
+    }
 }
