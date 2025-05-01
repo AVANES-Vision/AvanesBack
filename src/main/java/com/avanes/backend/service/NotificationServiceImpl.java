@@ -88,14 +88,43 @@ public class NotificationServiceImpl implements NotificationService {
 
         notificationRepository.saveAll(notifications);
     }
+    
+    @Transactional
+    public void createNoticeNotification(String moduleId, String title, String message) {
+        Notification notification;
+        
+        if ("All".equals(moduleId)) {
+            // Create notification for all users
+            notification = Notification.builder()
+                    .title(title)
+                    .message(message)
+                    .type(NotificationType.NOTICE_PUBLISHED)
+                    .audience(NotificationAudience.ALL_USERS)
+                    .isRead(false)
+                    .build();
+        } else {
+            // Create notification for specific module
+            notification = Notification.builder()
+                    .title(title)
+                    .message(message)
+                    .type(NotificationType.NOTICE_PUBLISHED)
+                    .audience(NotificationAudience.MODULE_STUDENTS)
+                    .audienceId(moduleId)
+                    .isRead(false)
+                    .build();
+        }
+        
+        notificationRepository.save(notification);
+    }
 
     public List<Notification> getUserNotifications(String userId) {
         // Get notifications for the user based on their enrollments and specific notifications
-        return notificationRepository.findByAudienceIdOrAudienceOrderByCreatedAtDesc(userId, NotificationAudience.ALL_USERS);
+        // The new method will correctly retrieve both personal notifications and global ones
+        return notificationRepository.findForUserWithGlobalNotifications(userId, NotificationAudience.ALL_USERS);
     }
 
     public List<Notification> getUnreadNotifications(String userId) {
-        return notificationRepository.findByAudienceIdAndIsReadOrderByCreatedAtDesc(userId, false);
+        return notificationRepository.findUnreadForUserWithGlobalNotifications(userId, NotificationAudience.ALL_USERS, false);
     }
 
     @Transactional
@@ -108,13 +137,17 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Transactional
     public void markAllAsRead(String userId) {
-        List<Notification> unreadNotifications = notificationRepository.findByAudienceIdAndIsReadOrderByCreatedAtDesc(userId, false);
+        // Get all unread notifications for this user - including global ones
+        List<Notification> unreadNotifications = notificationRepository.findUnreadForUserWithGlobalNotifications(
+            userId, NotificationAudience.ALL_USERS, false);
+            
+        // Mark them all as read
         unreadNotifications.forEach(notification -> notification.setRead(true));
         notificationRepository.saveAll(unreadNotifications);
     }
 
     public long getUnreadCount(String userId) {
-        return notificationRepository.countByAudienceIdAndIsRead(userId, false);
+        return notificationRepository.countUnreadForUserWithGlobalNotifications(userId, NotificationAudience.ALL_USERS, false);
     }
 
     @Transactional

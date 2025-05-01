@@ -74,12 +74,11 @@ public class NoticeServiceImpl implements NoticeService {
 
         try {
             Notice savedNotice = noticeRepository.save(notice);
-            notificationService.createNotification(
-                    List.of("702"),
-                    savedNotice.getTitle(),
-                    savedNotice.getContent(),
-                    Notification.NotificationType.NOTICE_PUBLISHED
-            );
+            
+            // Send notification to affected users
+            createNoticeNotification(savedNotice, "New Notice Published", 
+                    "A new notice has been published: " + savedNotice.getTitle());
+            
             return new GetNoticeDto(savedNotice);
         } catch (Exception e) {
             throw new RuntimeException("Failed to add notice: " + e.getMessage(), e);
@@ -98,6 +97,11 @@ public class NoticeServiceImpl implements NoticeService {
 
         try {
             Notice updatedNotice = noticeRepository.save(notice);
+            
+            // Send notification to affected users
+            createNoticeNotification(updatedNotice, "Notice Updated", 
+                    "A notice has been updated: " + updatedNotice.getTitle());
+            
             return new GetNoticeDto(updatedNotice);
         } catch (Exception e) {
             throw new RuntimeException("Failed to update notice with ID " + notice.getNoticeId() + ": " + e.getMessage(), e);
@@ -114,7 +118,17 @@ public class NoticeServiceImpl implements NoticeService {
             if (!noticeRepository.existsById(noticeId)) {
                 throw new EntityNotFoundException("Cannot delete - Notice not found with ID: " + noticeId);
             }
+            
+            // Get notice details before deletion for notification
+            Notice notice = noticeRepository.findById(noticeId)
+                    .orElseThrow(() -> new EntityNotFoundException("Notice not found with ID: " + noticeId));
+            
             noticeRepository.deleteById(noticeId);
+            
+            // Send notification to affected users
+            createNoticeNotification(notice, "Notice Removed", 
+                    "A notice has been removed: " + notice.getTitle());
+            
             return "Notice deleted successfully";
         } catch (EntityNotFoundException e) {
             throw e;
@@ -155,9 +169,6 @@ public class NoticeServiceImpl implements NoticeService {
             throw new RuntimeException("Failed to retrieve notices for module ID " + moduleId + ": " + e.getMessage(), e);
         }
     }
-
-
-
 
     @Override
     public List<GetNoticesDto> getAllNoticesByModuleIdAsUser(String moduleId) {
@@ -201,5 +212,17 @@ public class NoticeServiceImpl implements NoticeService {
 //            throw new IllegalArgumentException("Notice ID cannot be null");
 //        }
         // Add additional validation as needed based on your Notice model requirements
+    }
+    
+    /**
+     * Creates a notification for a notice based on its module target
+     */
+    private void createNoticeNotification(Notice notice, String title, String message) {
+        // Use the notification service to create the notification
+        notificationService.createNoticeNotification(
+            notice.getModule(),  // This is either the module ID or "All"
+            title,
+            message
+        );
     }
 }

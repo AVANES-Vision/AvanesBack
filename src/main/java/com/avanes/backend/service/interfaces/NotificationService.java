@@ -73,6 +73,22 @@ public interface NotificationService {
     void createGradeReleasedNotification(String userId, String assessmentName);
 
     /**
+     * Creates a notification for a notice that was published, updated, or deleted.
+     * 
+     * @param moduleId The module ID the notice is for (or "All" for all users)
+     * @param title    The title of the notification
+     * @param message  The message of the notification
+     * 
+     * @apiNote {
+     *   "purpose": "Notify users about notices relevant to them",
+     *   "audience": "Either all users or students in a specific module",
+     *   "notificationType": "NOTICE_PUBLISHED",
+     *   "behavior": "Creates and saves a notification about the notice"
+     * }
+     */
+    void createNoticeNotification(String moduleId, String title, String message);
+
+    /**
      * Creates custom notifications for multiple users with specified content and type.
      *
      * @param userIds List of user IDs who should receive the notification
