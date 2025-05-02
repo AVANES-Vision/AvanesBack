@@ -67,6 +67,7 @@ public class MagicLinkService {
         // Check if magic link already exists for this exam and user
         Optional<MagicLink> existingLink = magicLinkRepository.findByExamAndUser(exam, user);
         if (existingLink.isPresent()) {
+            System.out.println("Magic link already exists for exam ID: " + examId + " and user ID: " + userId);
             return existingLink.get();
         }
 
@@ -76,7 +77,11 @@ public class MagicLinkService {
         magicLink.setRandomString(UUID.randomUUID().toString());
         magicLink.setStatus(MagicLink.MagicLinkStatus.ACTIVE);
 
-        return magicLinkRepository.save(magicLink);
+        System.out.println("Creating new magic link for exam ID: " + examId + " and user ID: " + userId);
+        MagicLink savedLink = magicLinkRepository.save(magicLink);
+        System.out.println("Magic link created successfully with ID: " + savedLink.getId());
+        
+        return savedLink;
     }
 
     @Transactional
@@ -136,5 +141,17 @@ public class MagicLinkService {
         magicLinkRepository.save(magicLink);
 
         return true;
+    }
+
+    @Transactional
+    public void verifyMagicLinkExamId(Long magicLinkId) {
+        MagicLink magicLink = magicLinkRepository.findById(magicLinkId)
+                .orElseThrow(() -> new RuntimeException("Magic link not found with ID: " + magicLinkId));
+        
+        if (magicLink.getExam() == null) {
+            System.err.println("ERROR: Magic link " + magicLinkId + " has no exam associated with it!");
+        } else {
+            System.out.println("Magic link " + magicLinkId + " is correctly associated with exam ID: " + magicLink.getExam().getId());
+        }
     }
 }

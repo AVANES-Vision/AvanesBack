@@ -19,17 +19,20 @@ public class ExamService {
     private final ExamQuestionService examQuestionService;
     private final MagicLinkRepository magicLinkRepository;
     private final UserService userService;
+    private final MagicLinkService magicLinkService;
 
     @Autowired
     public ExamService(
             ExamRepository examRepository,
             ExamQuestionService examQuestionService,
             MagicLinkRepository magicLinkRepository,
-            UserService userService) {
+            UserService userService,
+            MagicLinkService magicLinkService) {
         this.examRepository = examRepository;
         this.examQuestionService = examQuestionService;
         this.magicLinkRepository = magicLinkRepository;
         this.userService = userService;
+        this.magicLinkService = magicLinkService;
     }
 
     public List<Exam> getAllExams() {
@@ -89,8 +92,21 @@ public class ExamService {
         Exam exam = examRepository.findById(examId)
                 .orElseThrow(() -> new RuntimeException("Exam not found with ID: " + examId));
 
+        // Get current status
+        Exam.ExamStatus currentStatus = exam.getStatus();
+        
+        // Update exam status
         exam.setStatus(status);
-        examRepository.save(exam);
+        exam = examRepository.save(exam);
+
+        // Handle magic links based on status change
+        if (status == Exam.ExamStatus.ENDED) {
+            // When exam ends, invalidate all magic links
+            magicLinkService.invalidateAllMagicLinksForExam(examId);
+        } else if (currentStatus == Exam.ExamStatus.ENDED && status != Exam.ExamStatus.ENDED) {
+            // If exam is being reactivated from ENDED state, we might want to handle this case
+            System.out.println("Exam " + examId + " is being reactivated from ENDED state");
+        }
     }
 
     public void checkAndUpdateExamStatuses() {

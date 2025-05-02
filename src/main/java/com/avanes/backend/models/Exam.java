@@ -28,7 +28,7 @@ public class Exam {
     @OneToMany(mappedBy = "exam", cascade = CascadeType.ALL)
     private List<ExamQuestion> examQuestions;
 
-    @OneToMany(mappedBy = "exam", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "exam", cascade = {}, orphanRemoval = false)
     private List<MagicLink> magicLinks;
 
     public enum ExamStatus {

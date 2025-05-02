@@ -8,6 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Arrays;
 
 @RestController
 @RequestMapping("/api/v2/exams")
@@ -89,6 +92,49 @@ public class ExamController {
         examService.updateExamStatus(id, newStatus);
 
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{id}/update-status")
+    public ResponseEntity<Map<String, Object>> updateExamStatusWithDetails(
+            @PathVariable Long id,
+            @RequestBody Map<String, String> request) {
+        
+        try {
+            // Validate exam exists
+            if (!examService.getExamById(id).isPresent()) {
+                return ResponseEntity.notFound().build();
+            }
+
+            // Validate status
+            String statusStr = request.get("status");
+            if (statusStr == null) {
+                return ResponseEntity.badRequest().build();
+            }
+
+            Exam.ExamStatus newStatus = Exam.ExamStatus.valueOf(statusStr);
+            
+            // Update status
+            examService.updateExamStatus(id, newStatus);
+
+            // Prepare response
+            Map<String, Object> response = new HashMap<>();
+            response.put("examId", id);
+            response.put("newStatus", newStatus);
+            response.put("message", "Exam status updated successfully");
+            response.put("timestamp", LocalDateTime.now());
+
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("error", "Invalid status value");
+            errorResponse.put("validStatuses", Arrays.asList(Exam.ExamStatus.values()));
+            return ResponseEntity.badRequest().body(errorResponse);
+        } catch (Exception e) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("error", "Failed to update exam status");
+            errorResponse.put("message", e.getMessage());
+            return ResponseEntity.internalServerError().body(errorResponse);
+        }
     }
 
     @DeleteMapping("/{id}")
