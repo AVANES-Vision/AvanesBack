@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.HashMap;
 
 @RestController
 @RequestMapping("/api/v2/magic-links")
@@ -99,7 +100,7 @@ public class MagicLinkController {
     }
 
     @PostMapping("/validate")
-    public ResponseEntity<Map<String, Boolean>> validateAccess(@RequestBody Map<String, String> request) {
+    public ResponseEntity<Map<String, Object>> validateAccess(@RequestBody Map<String, String> request) {
         String magicLinkString = request.get("magicLinkString");
         String ip = request.get("ip");
         String hwid = request.get("hwid");
@@ -108,8 +109,20 @@ public class MagicLinkController {
             return ResponseEntity.badRequest().build();
         }
 
+        Optional<MagicLink> magicLinkOpt = magicLinkService.getMagicLinkByRandomString(magicLinkString);
+        if (magicLinkOpt.isEmpty()) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("valid", false);
+            response.put("magicLink", null);
+            return ResponseEntity.ok(response);
+        }
+
+        MagicLink magicLink = magicLinkOpt.get();
         boolean isValid = magicLinkService.validateAccess(magicLinkString, ip, hwid);
-        Map<String, Boolean> response = Map.of("valid", isValid);
+        
+        Map<String, Object> response = new HashMap<>();
+        response.put("valid", isValid);
+        response.put("magicLink", magicLink);
         return ResponseEntity.ok(response);
     }
 }

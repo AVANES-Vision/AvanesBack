@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 @Data
@@ -30,6 +31,11 @@ public class MagicLink {
 
     @Enumerated(EnumType.STRING)
     private MagicLinkStatus status;
+
+    @JsonProperty("examId")
+    public Long getExamId() {
+        return exam != null ? exam.getId() : null;
+    }
 
     public enum MagicLinkStatus {
         ACTIVE, USED, EXPIRED
